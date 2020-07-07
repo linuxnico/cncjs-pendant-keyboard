@@ -10,6 +10,20 @@ var serverMain = require("../index");
 var hid = require("node-hid");
 var options = {};
 
+var zp = 54 ;
+var zm = 52 ;
+var xp = 51 ;
+var xm = 49 ;
+var yp = 53 ;
+var ym = 50 ;
+var abort = 48 ;
+var one = 56 ;
+var plapez = 55 ;
+var ten = 57 ;
+
+
+
+
 program
     .version(pkg.version)
     .usage("-s <secret> -p <port> [options]")
@@ -171,82 +185,68 @@ var createServer = function(options) {
 
             // Process pressed key
             switch (kbdevent.extra) {
-                case 234: // vol+
+                case zp: // z +
                     socket.emit(
                         "write",
                         options.port,
                         "G91 Z-" + kbdevent.move + ";\n"
                     );
                     break;
-                case 233: // vol-
+                case zm: // z -
                     socket.emit(
                         "write",
                         options.port,
                         "G91 Z" + kbdevent.move + ";\n"
                     );
                     break;
-                case 131: // Media: Play (Top corner left)
-                    socket.emit("write", options.port, "G10 L20 P1 X0;\n");
-                    break;
-                case 138: // E-mail (Top corner left)
-                    socket.emit("write", options.port, "G10 L20 P1 Y0;\n");
-                    break;
-                case 226: // Mute (Top corner left)
-                    socket.emit("write", options.port, "G10 L20 P1 Z0;\n");
-                    break;
-                case 1: // Mouse Left (Top corner left)
-                    socket.emit(
-                        "write",
-                        options.port,
-                        "G10 L20 P1 X0 Y0 Z0;\n"
-                    );
-                    break;
-                case 148: // Key: Home -> Goto Zero-working position
+                case gohome: // Goto Zero-working position
                     socket.emit("write", options.port, "G90 X0 Y0 Z0;\n");
                     break;
                 default:
                     break;
             }
             switch (kbdevent.key) {
-                case 80: // arrow: left
+                case xm: //  x -
                     socket.emit(
                         "write",
                         options.port,
                         "G91 X-" + kbdevent.move + ";\n"
                     );
                     break;
-                case 79: // arrow: right
+                case xp: //  x +
                     socket.emit(
                         "write",
                         options.port,
                         "G91 X" + kbdevent.move + ";\n"
                     );
                     break;
-                case 82: // arrow: up
+                case yp: //  y +
                     socket.emit(
                         "write",
                         options.port,
                         "G91 Y" + kbdevent.move + ";\n"
                     );
                     break;
-                case 81: // arrow: down
+                case ym: // y -
                     socket.emit(
                         "write",
                         options.port,
                         "G91 Y-" + kbdevent.move + ";\n"
                     );
                     break;
-                case 58: // key: F1
-                    kbdevent.default_move = 0.1;
+                case palpez: // z touch tester
+                    socket.emit(
+                        "write",
+                        options.port,
+                        "G91;\nG38.2;\nG90;\n"
+                    );
                     break;
-                case 59: // key: F2
+                case one: // 1 step
                     kbdevent.default_move = 1;
                     break;
-                case 60: // key: F3
+                case ten: // 10 steps
                     kbdevent.default_move = 10;
                     break;
-                case 40: // Key: OK or Enter
-                    kbdevent.can_repeat = kbdevent.can_repeat ? 0 : 1;
                 default:
                     break;
             }
